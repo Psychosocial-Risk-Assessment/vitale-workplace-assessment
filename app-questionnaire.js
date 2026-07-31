@@ -1,0 +1,353 @@
+const GOOGLE_FORM_ID = "1FAIpQLSdYGsiXhmDkclGMlpjDypfFFDlrRMzMWjxpg2UZpX69-hut9w";
+
+const GOOGLE_FORM_ENTRIES = {
+  company: "entry.1355382990",
+  questionnaire: "entry.420033818",
+  gender: "entry.1645222977",
+  age: "entry.963709191",
+  role: "entry.940938778",
+  companyTime: "entry.2054548076",
+  department: "entry.351018800",
+  unit: "entry.1950292232",
+  answers: "entry.444470611",
+};
+
+const qs = new URLSearchParams(window.location.search);
+const companyParam = qs.get("company");
+const questionnaireParam = qs.get("questionnaire");
+
+const els = {
+  error: document.getElementById("state-error"),
+  errorDetail: document.getElementById("state-error-detail"),
+  loading: document.getElementById("state-loading"),
+  done: document.getElementById("state-done"),
+  sending: document.getElementById("state-sending"),
+  shell: document.getElementById("q-shell"),
+  company: document.getElementById("q-company"),
+  title: document.getElementById("q-title"),
+  gaugeCurrent: document.getElementById("gauge-current"),
+  gaugeTotal: document.getElementById("gauge-total"),
+  gaugePercent: document.getElementById("gauge-percent"),
+  gaugeFill: document.getElementById("gauge-fill"),
+  qIndex: document.getElementById("q-index"),
+  qText: document.getElementById("q-text"),
+  qOptions: document.getElementById("q-options"),
+  btnPrev: document.getElementById("btn-prev"),
+  btnNext: document.getElementById("btn-next"),
+  employeeShell: document.getElementById("employee-shell"),
+  employeeGender: document.getElementById("employee-gender"),
+  employeeAge: document.getElementById("employee-age"),
+  employeeRole: document.getElementById("employee-role"),
+  employeeCompanyTime: document.getElementById("employee-company-time"),
+  employeeDepartment: document.getElementById("employee-department"),
+  employeeUnit: document.getElementById("employee-unit"),
+  btnStart: document.getElementById("btn-start-questionnaire"),
+};
+
+function showOnly(stateEl) {
+  [els.error, els.loading, els.done, els.sending, els.employeeShell, els.shell].forEach((el) => {
+    if (!el) return;
+    el.style.display = el === stateEl ? "flex" : "none";
+  });
+}
+
+function readEmployeeForm() {
+  return [
+    { el: els.employeeGender, value: els.employeeGender.value.trim() },
+    { el: els.employeeAge, value: els.employeeAge.value.trim() },
+    { el: els.employeeRole, value: els.employeeRole.value.trim() },
+    { el: els.employeeCompanyTime, value: els.employeeCompanyTime.value.trim() },
+    { el: els.employeeDepartment, value: els.employeeDepartment.value.trim() },
+    { el: els.employeeUnit, value: els.employeeUnit.value.trim() },
+  ];
+}
+
+function validateEmployee() {
+  const fields = readEmployeeForm();
+
+  fields.forEach(({ el }) => el.classList.remove("is-invalid"));
+  const empty = fields.filter(({ value }) => !value);
+
+  if (empty.length) {
+    empty.forEach(({ el }) => el.classList.add("is-invalid"));
+    return null;
+  }
+
+  const [fGender, fAge, fRole, fCompanyTime, fDepartment, fUnit] = fields;
+  return {
+    gender: fGender.value,
+    age: fAge.value,
+    role: fRole.value,
+    companyTime: fCompanyTime.value,
+    department: fDepartment.value,
+    unit: fUnit.value,
+  };
+}
+
+function fail(message) {
+  els.errorDetail.textContent = message;
+  showOnly(els.error);
+}
+
+if (!companyParam || !questionnaireParam) {
+  fail("Este link está sem os parâmetros de empresa ou questionário. Peça o link correto a quem organizou a avaliação.");
+} else {
+  loadQuestionnaire(questionnaireParam);
+}
+
+let state = {
+  data: null,
+  questions: [],
+  currentIndex: 0,
+  responses: {},
+  employee: {
+    gender: "",
+    age: "",
+    role: "",
+    companyTime: "",
+    department: "",
+    unit: "",
+  },
+};
+
+async function loadQuestionnaire(id) {
+  const safeId = id.replace(/[^a-z0-9_-]/gi, "");
+
+  try {
+    const res = await fetch(`data/${safeId}.json`, {
+      cache: "no-store",
+    });
+
+    if (!res.ok) throw new Error("not found");
+
+    const data = await res.json();
+
+    if (!data.sections || !data.sections.length)
+      throw new Error("empty");
+
+    state.data = data;
+
+    state.questions = data.sections.flatMap(section =>
+      section.questions.map(question => ({
+        ...question,
+        sectionId: section.id,
+        sectionTitle: section.title
+      }))
+    );
+
+    showEmployeeForm();
+
+  } catch {
+    fail(`Não encontramos o questionário "${id}". Verifique se o arquivo data/${safeId}.json existe.`);
+  }
+}
+
+function showEmployeeForm() {
+  showOnly(els.employeeShell);
+}
+
+function handleStart() {
+  const employee = validateEmployee();
+  if (!employee) return;
+  state.employee = employee;
+  startQuestionnaire();
+}
+
+if (els.btnStart) {
+  els.btnStart.addEventListener("click", handleStart);
+}
+
+function startQuestionnaire() {
+  els.company.textContent = companyParam;
+  els.gaugeTotal.textContent = state.questions.length;
+  showOnly(els.shell);
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const total = state.questions.length;
+  const question = state.questions[state.currentIndex];
+  const scale = state.data.scales[question.scaleId];
+
+  els.qIndex.textContent =
+    `Pergunta ${String(state.currentIndex + 1).padStart(2, "0")}`;
+
+  els.qText.textContent = question.text;
+
+  els.gaugeCurrent.textContent = state.currentIndex + 1;
+
+  const percent = Math.round(((state.currentIndex + 1) / total) * 100);
+
+  els.gaugeFill.style.width = `${percent}%`;
+  els.gaugePercent.textContent = `${percent}%`;
+
+  els.qOptions.innerHTML = "";
+
+  if (question.type === "textarea") {
+
+    const textarea = document.createElement("textarea");
+    textarea.className = "q-textarea";
+    textarea.rows = 5;
+    textarea.value = state.responses[question.id] || "";
+
+    textarea.addEventListener("input", (e) => {
+      state.responses[question.id] = e.target.value;
+      renderQuestion();
+    });
+
+    els.qOptions.appendChild(textarea);
+
+  } else {
+
+    scale.forEach((opt) => {
+
+      const selected = state.responses[question.id] === opt.value;
+
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "q-option" + (selected ? " is-selected" : "");
+      button.innerHTML =
+        `<span class="q-option__dot"></span><span class="q-option__text">${opt.label}</span>`;
+
+      button.addEventListener("click", () => {
+        state.responses[question.id] = opt.value;
+        renderQuestion();
+      });
+
+      els.qOptions.appendChild(button);
+
+    });
+
+  }
+
+  els.btnPrev.disabled = state.currentIndex === 0;
+
+  const isLast = state.currentIndex === total - 1;
+
+  els.btnNext.textContent = isLast ? "Enviar" : "Próximo";
+  els.btnNext.classList.toggle("q-btn--submit", isLast);
+
+  const answered =
+    state.responses[question.id] !== undefined &&
+    state.responses[question.id] !== "";
+
+  els.btnNext.disabled = !answered;
+}
+
+els.btnPrev.addEventListener("click", () => {
+  if (state.currentIndex > 0) {
+    state.currentIndex--;
+    renderQuestion();
+  }
+});
+
+els.btnNext.addEventListener("click", () => {
+
+  const total = state.questions.length;
+
+  if (state.currentIndex === total - 1) {
+    submitResponses();
+    return;
+  }
+
+  state.currentIndex++;
+  renderQuestion();
+
+});
+
+function buildExportAnswers() {
+  return state.questions.map((question) => {
+
+    const value = state.responses[question.id];
+
+    const option = state.data.scales[question.scaleId]
+      ?.find(scale => scale.value === value);
+
+    return {
+      section: question.sectionTitle,
+      question: question.text,
+      value,
+      label: option?.label ?? ""
+    };
+
+  });
+}
+
+async function submitResponses() {
+
+  console.log("=== submitResponses ===");
+
+  showOnly(els.sending);
+
+  const payload = {
+    company: companyParam,
+    questionnaire: state.data.id,
+    submittedAt: new Date().toISOString(),
+    employee: { ...state.employee },
+    answers: buildExportAnswers(),
+  };
+ 
+  const hasFormConfig =
+  GOOGLE_FORM_ID &&
+  Object.values(GOOGLE_FORM_ENTRIES).every(Boolean);
+
+  if (hasFormConfig) {
+
+    try {
+
+      const formData = new FormData();
+
+      const fieldsToSend = [
+        ["company", payload.company],
+        ["questionnaire", payload.questionnaire],
+        ["gender", payload.employee.gender],
+        ["age", payload.employee.age],
+        ["role", payload.employee.role],
+        ["companyTime", payload.employee.companyTime],
+        ["department", payload.employee.department],
+        ["unit", payload.employee.unit],
+        [
+  "answers",
+  payload.answers
+    .map(
+      (answer) => `Seção: ${answer.section}
+Pergunta: ${answer.question}
+Valor: ${answer.value}
+Resposta: ${answer.label}`
+    )
+    .join("\n\n"),
+],
+      ];
+
+      fieldsToSend.forEach(([key, value]) => {
+        const entryId = GOOGLE_FORM_ENTRIES[key];
+        if (entryId) formData.append(entryId, value);
+      });
+
+      await fetch(
+        `https://docs.google.com/forms/d/e/${GOOGLE_FORM_ID}/formResponse`,
+        {
+          method: "POST",
+          mode: "no-cors",
+          body: formData,
+        }
+      );
+
+      console.log("Respostas enviadas ao Google Forms com sucesso.");
+
+    } catch (err) {
+
+      console.error("Falha ao enviar para o Google Forms:", err);
+      console.log("Payload completo (para debug):", payload);
+
+    }
+
+  } else {
+
+    console.log("Google Forms não configurado. Payload:", payload);
+
+  }
+
+  showOnly(els.done);
+
+}

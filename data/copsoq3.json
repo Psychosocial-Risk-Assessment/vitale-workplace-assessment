@@ -1,0 +1,794 @@
+{
+  "id": "copsoq3",
+  "title": "COPSOQ III",
+  "_readme": "Questionário organizado em seções. Cada seção representa um instrumento do COPSOQ III.",
+
+  "scales": {
+    "frequencia": [
+      { "value": 1, "label": "Nunca / quase nunca" },
+      { "value": 2, "label": "Raramente" },
+      { "value": 3, "label": "Às vezes" },
+      { "value": 4, "label": "Frequentemente" },
+      { "value": 5, "label": "Sempre" }
+    ]
+  },
+
+  "sections": [
+    {
+      "id": "AEP",
+      "title": "Análise Ergonômica Preliminar",
+      "questions": [
+          {
+            "id": "AEP_001",
+            "text": "O trabalho é realizado sentado durante toda a jornada de trabalho?",
+            "scaleId": "frequencia"
+          },
+          {
+            "id": "AEP_002",
+            "text": "O trabalho é realizado alternado (em pé/sentado)?",
+            "scaleId": "frequencia"
+          },
+          {
+            "id": "AEP_003",
+            "text": "Existe pausa durante a jornada de trabalho?",
+            "scaleId": "frequencia"
+          },
+          {
+            "id": "AEP_004",
+            "text": "Há um rodízio (revezamento) de tarefas?",
+            "scaleId": "frequencia"
+          },
+          {
+            "id": "AEP_005",
+            "text": "Há necessidade de fazer hora extra?",
+            "scaleId": "frequencia"
+          },
+          {
+            "id": "AEP_006",
+            "text": "Existe excesso de pressão na realização das tarefas?",
+            "scaleId": "frequencia"
+          },
+          {
+            "id": "AEP_007",
+            "text": "Movimentos repetitivos durante a jornada de trabalho?",
+            "scaleId": "frequencia"
+          },
+          {
+            "id": "AEP_008",
+            "text": "Existem dificuldades nos relacionamentos interpessoais?",
+            "scaleId": "frequencia"
+          },
+          {
+            "id": "AEP_009",
+            "text": "O trabalho exige postura forçada dos membros superiores?",
+            "scaleId": "frequencia"
+          },
+          {
+            "id": "AEP_010",
+            "text": "O trabalho exige grande esforço com as mãos?",
+            "scaleId": "frequencia"
+          },
+          {
+            "id": "AEP_011",
+            "text": "O trabalho é fisicamente pesado?",
+            "scaleId": "frequencia"
+          },
+          {
+            "id": "AEP_012",
+            "text": "A norma de produção dessa atividade é complexa?",
+            "scaleId": "frequencia"
+          },
+          {
+            "id": "AEP_013",
+            "text": "O modo operatório é muito exigente?",
+            "scaleId": "frequencia"
+          },
+          {
+            "id": "AEP_014",
+            "text": "Posturas extremas ou nocivas do tronco, do pescoço, da cabeça, dos membros superiores e/ou dos membros inferiores?",
+            "scaleId": "frequencia"
+          },
+          {
+            "id": "AEP_015",
+            "text": "Movimentos bruscos de impacto dos membros superiores?",
+            "scaleId": "frequencia"
+          },
+          {
+            "id": "AEP_016",
+            "text": "Uso excessivo de força muscular?",
+            "scaleId": "frequencia"
+          },
+          {
+            "id": "AEP_017",
+            "text": "Exposição a vibrações?",
+            "scaleId": "frequencia"
+          },
+          {
+            "id": "AEP_018",
+            "text": "Exigência cognitiva?",
+            "scaleId": "frequencia"
+          },
+          {
+            "id": "AEP_019",
+            "text": "Existe a necessidade de levantamento, transporte e descarga individual de cargas?",
+            "scaleId": "frequencia"
+          },
+          {
+            "id": "AEP_020",
+            "text": "A carga é pesada?",
+            "scaleId": "frequencia"
+          },
+          {
+            "id": "AEP_021",
+            "text": "O conjunto mobiliário do posto de trabalho apresenta regulagens?",
+            "scaleId": "frequencia"
+          },
+          {
+            "id": "AEP_022",
+            "text": "Amplitudes articulares excessivas ou posturas nocivas de trabalho?",
+            "scaleId": "frequencia"
+          },
+          {
+            "id": "AEP_023",
+            "text": "Distância requerida dos olhos ao campo de trabalho e com a altura do assento?",
+            "scaleId": "frequencia"
+          },
+          {
+            "id": "AEP_024",
+            "text": "Área de trabalho dentro da zona de alcance manual e de fácil visualização pelo trabalhador?",
+            "scaleId": "frequencia"
+          },
+          {
+            "id": "AEP_025",
+            "text": "Espaço suficiente para pernas e pés na base do plano de trabalho? (trabalho sentado)",
+            "scaleId": "frequencia"
+          },
+          {
+            "id": "AEP_026",
+            "text": "Utilizam apoio para os pés?",
+            "scaleId": "frequencia"
+          },
+          {
+            "id": "AEP_027",
+            "text": "Espaço suficiente para os pés na base do plano de trabalho (trabalho em pé)?",
+            "scaleId": "frequencia"
+          },
+          {
+            "id": "AEP_028",
+            "text": "A área de trabalho está dentro da zona de alcance?",
+            "scaleId": "frequencia"
+          },
+          {
+            "id": "AEP_029",
+            "text": "Altura ajustável à estatura do trabalhador e à natureza da função exercida?",
+            "scaleId": "frequencia"
+          },
+          {
+            "id": "AEP_030",
+            "text": "Sistemas de ajustes e manuseio acessíveis?",
+            "scaleId": "frequencia"
+          },
+          {
+            "id": "AEP_031",
+            "text": "Borda frontal arredondada?",
+            "scaleId": "frequencia"
+          },
+          {
+            "id": "AEP_032",
+            "text": "Encosto com forma adaptada ao corpo para proteção da região lombar?",
+            "scaleId": "frequencia"
+          },
+          {
+            "id": "AEP_033",
+            "text": "Para atividades em pé, existem assentos com encosto para descanso durante as pausas?",
+            "scaleId": "frequencia"
+          },
+          {
+            "id": "AEP_034",
+            "text": "Os locais e situações de trabalho têm iluminação apropriada à natureza da atividade?",
+            "scaleId": "frequencia"
+          },
+          {
+            "id": "AEP_035",
+            "text": "A organização adota medidas de controle do ruído para proporcionar conforto acústico?",
+            "scaleId": "frequencia"
+          },
+          {
+            "id": "AEP_036",
+            "text": "A organização adota medidas de controle da temperatura? (Entre 18° e 25° para ambientes climatizados)",
+            "scaleId": "frequencia"
+          }
+        ]
+    },
+    {
+      "id": "EACT",
+      "title": "Escala de Avaliação do Contexto do Trabalho",
+      "questions": [
+        {
+          "id": "EACT_001",
+          "text": "O ritmo de trabalho é excessivo?",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EACT_002",
+          "text": "As tarefas são cumpridas com pressão de prazos?",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EACT_003",
+          "text": "Existe forte cobrança por resultados?",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EACT_004",
+          "text": "As normas para a execução da tarefa são rígidas?",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EACT_005",
+          "text": "Existe fiscalização do desempenho?",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EACT_006",
+          "text": "O número de pessoas é insuficiente para se realizar as tarefas?",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EACT_007",
+          "text": "Os resultados esperados estão fora da realidade?",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EACT_008",
+          "text": "Existe divisão entre quem planeja e quem executa?",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EACT_009",
+          "text": "As tarefas são repetitivas?",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EACT_010",
+          "text": "Falta tempo para realizar pausas de descanso no trabalho?",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EACT_011",
+          "text": "As tarefas executadas sofrem descontinuidade?",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EACT_012",
+          "text": "As condições de trabalho são precárias?",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EACT_013",
+          "text": "O ambiente físico é desconfortável?",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EACT_014",
+          "text": "Existe muito barulho no ambiente de trabalho?",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EACT_015",
+          "text": "O mobiliário existente no ambiente de trabalho é inadequado?",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EACT_016",
+          "text": "Os instrumentos de trabalho são insuficientes para a realização das tarefas?",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EACT_017",
+          "text": "O material de consumo é insuficiente?",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EACT_018",
+          "text": "As tarefas não estão claramente definidas?",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EACT_019",
+          "text": "Os funcionários são excluídos das decisões?",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EACT_020",
+          "text": "Existem dificuldades na comunicação entre chefia e subordinados?",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EACT_021",
+          "text": "Existem disputas profissionais no local de trabalho?",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EACT_022",
+          "text": "Falta integração no ambiente de trabalho?",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EACT_023",
+          "text": "A comunicação entre funcionários é insatisfatória?",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EACT_024",
+          "text": "Falta apoio das chefias para o meu desenvolvimento profissional?",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EACT_025",
+          "text": "As informações necessárias para executar as tarefas são de difícil acesso?",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EACT_026",
+          "text": "As condições de trabalho oferecem risco à segurança das pessoas?",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EACT_027",
+          "text": "O espaço físico para realizar o trabalho é inadequado?",
+          "scaleId": "frequencia"
+        }
+      ]
+    },
+    {
+      "id": "ECHT",
+      "title": "Escala de Custo Humano do Trabalho",
+      "questions": [
+        {
+          "id": "ECHT_001",
+          "text": "Usar força física",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "ECHT_002",
+          "text": "Usar os braços de forma contínua",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "ECHT_003",
+          "text": "Ficar em posição curvada",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "ECHT_004",
+          "text": "Caminhar",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "ECHT_005",
+          "text": "Ser obrigado a ficar em pé",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "ECHT_006",
+          "text": "Ter que manusear objetos pesados",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "ECHT_007",
+          "text": "Fazer esforço físico",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "ECHT_008",
+          "text": "Usar as pernas de forma contínua",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "ECHT_009",
+          "text": "Usar as mãos de forma repetida",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "ECHT_010",
+          "text": "Subir e descer escada",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "ECHT_011",
+          "text": "Desenvolver macetes",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "ECHT_012",
+          "text": "Ter que resolver problemas",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "ECHT_013",
+          "text": "Ser obrigado a lidar com imprevistos",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "ECHT_014",
+          "text": "Fazer previsão de acontecimentos",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "ECHT_015",
+          "text": "Usar a visão de forma contínua",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "ECHT_016",
+          "text": "Usar a memória",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "ECHT_017",
+          "text": "Ter desafios intelectuais",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "ECHT_018",
+          "text": "Fazer esforço mental",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "ECHT_019",
+          "text": "Ter concentração mental",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "ECHT_020",
+          "text": "Usar a criatividade",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "ECHT_021",
+          "text": "Ter controle das emoções",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "ECHT_022",
+          "text": "Ter que lidar com ordens contraditórias",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "ECHT_023",
+          "text": "Ter custo emocional",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "ECHT_024",
+          "text": "Ser obrigado a lidar com a agressividade dos outros",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "ECHT_025",
+          "text": "Disfarçar sentimentos",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "ECHT_026",
+          "text": "Ser obrigado a elogiar pessoas",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "ECHT_027",
+          "text": "Ser submetido a constrangimentos",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "ECHT_028",
+          "text": "Transgredir valores éticos",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "ECHT_029",
+          "text": "Ser obrigado a sorrir",
+          "scaleId": "frequencia"
+        }
+      ]
+    },
+    {
+      "id": "EADRT",
+      "title": "Escala de Avaliação dos Danos Relacionados ao Trabalho",
+      "questions": [
+        {
+          "id": "EADRT_001",
+          "text": "Dores no corpo",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EADRT_002",
+          "text": "Dores nos braços",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EADRT_003",
+          "text": "Dor de cabeça",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EADRT_004",
+          "text": "Distúrbios respiratórios",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EADRT_005",
+          "text": "Distúrbios digestivos",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EADRT_006",
+          "text": "Dores nas costas",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EADRT_007",
+          "text": "Distúrbios auditivos",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EADRT_008",
+          "text": "Alterações do apetite",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EADRT_009",
+          "text": "Distúrbios na visão",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EADRT_010",
+          "text": "Alterações do sono",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EADRT_011",
+          "text": "Dores nas pernas",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EADRT_012",
+          "text": "Distúrbios circulatórios",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EADRT_013",
+          "text": "Amargura",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EADRT_014",
+          "text": "Sensação de vazio",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EADRT_015",
+          "text": "Sentimento de desamparo",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EADRT_016",
+          "text": "Mau humor",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EADRT_017",
+          "text": "Vontade de desistir de tudo",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EADRT_018",
+          "text": "Tristeza",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EADRT_019",
+          "text": "Irritação com tudo",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EADRT_020",
+          "text": "Sensação de abandono",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EADRT_021",
+          "text": "Dúvida sobre a capacidade de fazer as tarefas",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EADRT_022",
+          "text": "Solidão",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EADRT_023",
+          "text": "Insensibilidade em relação aos colegas",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EADRT_024",
+          "text": "Dificuldades nas relações fora do trabalho",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EADRT_025",
+          "text": "Vontade de ficar sozinho",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EADRT_026",
+          "text": "Conflitos nas relações familiares",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EADRT_027",
+          "text": "Agressividade com os outros",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EADRT_028",
+          "text": "Dificuldade com os amigos",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EADRT_029",
+          "text": "Impaciência com as pessoas em geral",
+          "scaleId": "frequencia"
+        }
+      ]
+    },
+    {
+      "id": "EIPSTN",
+      "title": "Indicadores de Sofrimento no Trabalho",
+      "questions": [
+        {
+          "id": "EIPSTN_001",
+          "text": "Esgotamento emocional",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EIPSTN_002",
+          "text": "Estresse",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EIPSTN_003",
+          "text": "Sobrecarga de trabalho",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EIPSTN_004",
+          "text": "Frustração profissional",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EIPSTN_005",
+          "text": "Insegurança",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EIPSTN_006",
+          "text": "Medo",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EIPSTN_007",
+          "text": "Falta de reconhecimento",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EIPSTN_008",
+          "text": "Desvalorização profissional",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EIPSTN_009",
+          "text": "Sentimento de injustiça",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EIPSTN_010",
+          "text": "Desmotivação",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EIPSTN_011",
+          "text": "Cansaço excessivo",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EIPSTN_012",
+          "text": "Sofrimento no trabalho",
+          "scaleId": "frequencia"
+        }
+      ]
+    },
+    {
+      "id": "EIPSTP",
+      "title": "Indicadores de Prazer no Trabalho",
+      "questions": [
+        {
+          "id": "EIPSTP_001",
+          "text": "Satisfação",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EIPSTP_002",
+          "text": "Motivação",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EIPSTP_003",
+          "text": "Bem-estar",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EIPSTP_004",
+          "text": "Reconhecimento profissional",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EIPSTP_005",
+          "text": "Confiança na organização",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EIPSTP_006",
+          "text": "Cooperação entre colegas",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EIPSTP_007",
+          "text": "Liberdade para expressar opiniões",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EIPSTP_008",
+          "text": "Criatividade no trabalho",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EIPSTP_009",
+          "text": "Orgulho pelo trabalho realizado",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EIPSTP_010",
+          "text": "Realização profissional",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EIPSTP_011",
+          "text": "Sentimento de utilidade",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EIPSTP_012",
+          "text": "Valorização profissional",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EIPSTP_013",
+          "text": "Integração da equipe",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EIPSTP_014",
+          "text": "Autonomia no trabalho",
+          "scaleId": "frequencia"
+        },
+        {
+          "id": "EIPSTP_015",
+          "text": "Sentimento de pertencimento",
+          "scaleId": "frequencia"
+        }
+      ]
+    }
+  ]
+}

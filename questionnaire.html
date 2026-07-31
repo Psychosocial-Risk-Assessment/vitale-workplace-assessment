@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Avaliação de Riscos Psicossociais (NR-1) — Vitale</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<div class="brand">
+  <img src="assets/logodeitado.png" alt="Vitale" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'brand__fallback',innerHTML:'<span class=\'v-mark\'></span>VITALE'}))" />
+</div>
+
+<!-- Estado: parâmetros inválidos ou JSON não encontrado -->
+<main class="state-shell" id="state-error" style="display:none;">
+  <div class="state-card">
+    <p class="state-card__icon">Link inválido</p>
+    <h2>Não foi possível abrir este questionário</h2>
+    <p id="state-error-detail">Peça um novo link a quem organizou a avaliação.</p>
+  </div>
+</main>
+
+<!-- Estado: carregando -->
+<main class="state-shell" id="state-loading">
+  <div class="state-card">
+    <p class="state-card__icon">Carregando</p>
+    <h2>Preparando seu questionário…</h2>
+  </div>
+</main>
+
+<!-- Estado: obrigado -->
+<main class="state-shell" id="state-done" style="display:none;">
+  <div class="state-card">
+    <p class="state-card__icon">Concluído</p>
+    <h2>Respostas enviadas</h2>
+    <p>Obrigado por participar. Suas respostas são tratadas de forma confidencial e ajudam a empresa a agir sobre riscos psicossociais reais.</p>
+  </div>
+</main>
+
+<!-- Estado: enviando -->
+<main class="state-shell" id="state-sending" style="display:none;">
+  <div class="state-card">
+    <p class="state-card__icon">Enviando</p>
+    <h2>Registrando suas respostas…</h2>
+  </div>
+</main>
+
+<main class="employee-shell" id="employee-shell" style="display:none;">
+
+  <div class="employee-card">
+
+    <h2>Antes de iniciar</h2>
+
+    <p class="employee-description">
+      Para fins estatísticos e de análise dos resultados, informe alguns dados.
+      Suas respostas serão tratadas de forma confidencial.
+    </p>
+
+    <div class="field">
+      <label for="employee-gender">Sexo</label>
+      <select id="employee-gender">
+        <option value="">Selecione</option>
+        <option value="Masculino">Masculino</option>
+        <option value="Feminino">Feminino</option>
+        <option value="Outro">Outro</option>
+        <option value="Prefiro não informar">Prefiro não informar</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="employee-age">Idade</label>
+      <input
+        type="number"
+        id="employee-age"
+        min="14"
+        max="100"
+        placeholder="Ex.: 34">
+    </div>
+
+    <div class="field">
+      <label for="employee-role">Função</label>
+      <input
+        type="text"
+        id="employee-role"
+        placeholder="Ex.: Operador de Produção">
+    </div>
+
+    <div class="field">
+      <label for="employee-company-time">Tempo de empresa</label>
+      <select id="employee-company-time">
+        <option value="">Selecione</option>
+        <option>Menos de 6 meses</option>
+        <option>6 meses a 1 ano</option>
+        <option>1 a 2 anos</option>
+        <option>2 a 5 anos</option>
+        <option>5 a 10 anos</option>
+        <option>Mais de 10 anos</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="employee-department">Setor</label>
+      <input
+        type="text"
+        id="employee-department"
+        placeholder="Ex.: Produção">
+    </div>
+
+    <div class="field">
+      <label for="employee-unit">Unidade</label>
+      <input
+        type="text"
+        id="employee-unit"
+        placeholder="Ex.: Matriz">
+    </div>
+
+    <button class="q-btn q-btn--solid" id="btn-start-questionnaire">
+      Iniciar avaliação
+    </button>
+
+  </div>
+
+</main>
+
+<!-- Fluxo principal do questionário -->
+<div class="q-shell" id="q-shell" style="display:none;">
+  <header class="q-header">
+    <p class="q-header__company" id="q-company"></p>
+    <h1 class="q-header__title" id="q-title">Avaliação de Riscos Psicossociais (NR-1)</h1>
+    <p class="q-header__lede">Responda às perguntas abaixo conforme sua realidade de trabalho. Suas respostas são fundamentais para o bem-estar coletivo.</p>
+  </header>
+
+  <div class="gauge">
+    <div class="gauge__row">
+      <span class="gauge__count">Pergunta <b id="gauge-current">1</b> de <span id="gauge-total">—</span></span>
+      <span class="gauge__percent" id="gauge-percent">0%</span>
+    </div>
+    <div class="gauge__track">
+      <div class="gauge__fill" id="gauge-fill" style="width:0%"></div>
+    </div>
+  </div>
+
+  <section class="q-stage">
+    <div class="q-card" id="q-card">
+      <p class="q-card__index" id="q-index"></p>
+      <p class="q-card__text" id="q-text"></p>
+      <div class="q-options" id="q-options"></div>
+    </div>
+  </section>
+
+  <nav class="q-nav">
+    <button class="q-btn q-btn--ghost" id="btn-prev">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Anterior
+    </button>
+    <button class="q-btn q-btn--solid" id="btn-next">
+      Próxima
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </nav>
+
+  <p class="q-footer">© 2024 Vitale Health SaaS. Seus dados são protegidos por criptografia de ponta a ponta.</p>
+</div>
+
+<script src="app-questionnaire.js"></script>
+</body>
+</html>
