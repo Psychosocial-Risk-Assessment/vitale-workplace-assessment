@@ -251,6 +251,160 @@ a:focus-visible {
   color: var(--ink-faint);
 }
 
+.link-result__qr-trigger {
+  margin-top: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: transparent;
+  color: var(--orange);
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: background 0.15s ease;
+}
+.link-result__qr-trigger:hover { background: rgba(193, 68, 46, 0.06); }
+.link-result__qr-trigger:active { transform: translateY(1px); }
+
+.btn-secondary {
+  padding: 0 18px;
+  border-radius: 8px;
+  background: var(--paper);
+  color: var(--ink);
+  border: 1.5px solid var(--line);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.btn-secondary:hover { border-color: var(--orange); color: var(--orange); }
+.btn-secondary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ---------- Modal: QR Code ---------- */
+.qr-modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 20px;
+}
+.qr-modal.is-open { display: flex; }
+
+.qr-modal__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(20, 20, 20, 0.55);
+  backdrop-filter: blur(2px);
+}
+
+.qr-modal__card {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  background: var(--paper);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: clamp(24px, 5vw, 32px);
+  text-align: center;
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+}
+
+.qr-modal__close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--paper-muted);
+  color: var(--ink-soft);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.qr-modal__close:hover { background: var(--line); color: var(--ink); }
+
+.qr-modal__eyebrow {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--orange);
+  margin: 0 0 8px;
+}
+
+.qr-modal__card h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 6px;
+}
+
+.qr-modal__hint {
+  font-size: 13.5px;
+  color: var(--ink-soft);
+  margin: 0 0 18px;
+}
+
+.qr-modal__canvas {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px;
+  background: var(--paper-muted);
+  border-radius: 12px;
+  margin: 0 auto 16px;
+  min-height: 200px;
+}
+.qr-modal__canvas svg { display: block; max-width: 100%; height: auto; }
+
+.qr-modal__error {
+  color: var(--orange);
+  font-size: 13px;
+  margin: 0 0 12px;
+}
+
+.qr-modal__linkbox input {
+  width: 100%;
+  padding: 11px 12px;
+  border-radius: 8px;
+  border: 1.5px solid var(--line);
+  background: var(--paper-muted);
+  font-size: 12px;
+  color: var(--ink-soft);
+  font-family: var(--font-body);
+  margin-bottom: 14px;
+}
+
+.qr-modal__actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.qr-modal__actions .btn-primary,
+.qr-modal__actions .btn-secondary {
+  flex: 1;
+  padding: 12px 16px;
+}
+
+@media (max-width: 480px) {
+  .link-result__box {
+    flex-wrap: wrap;
+  }
+  .link-result__box input { flex: 1 1 100%; }
+  .link-result__box button { flex: 1 1 auto; }
+
+  .qr-modal__actions { flex-direction: column-reverse; }
+  .qr-modal__actions .btn-primary,
+  .qr-modal__actions .btn-secondary { width: 100%; }
+}
+
 /* ---------- Tela 2: Questionário ---------- */
 .q-shell {
   flex: 1;

@@ -79,7 +79,18 @@
       <div class="link-result__box">
         <input type="text" id="link-output" readonly />
         <button id="copy-btn">Copiar</button>
+        <button id="share-btn" class="btn-secondary">Compartilhar</button>
       </div>
+
+      <button type="button" id="qr-trigger" class="link-result__qr-trigger">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <rect x="3" y="3" width="7" height="7" rx="1"/>
+          <rect x="14" y="3" width="7" height="7" rx="1"/>
+          <rect x="3" y="14" width="7" height="7" rx="1"/>
+          <path d="M14 14h3v3h-3zM18 18h3v3h-3zM14 18h3M18 14v3"/>
+        </svg>
+        Mostrar QR Code
+      </button>
 
       <p class="link-result__hint" id="link-hint">
         Envie este link por WhatsApp, e-mail ou QR code. Funciona em celular e computador.
@@ -89,6 +100,37 @@
   </div>
 </main>
 
+<!-- Modal: QR Code -->
+<div class="qr-modal" id="qr-modal" role="dialog" aria-modal="true" aria-labelledby="qr-modal-title" aria-hidden="true">
+  <div class="qr-modal__overlay" aria-hidden="true"></div>
+  <div class="qr-modal__card">
+    <button class="qr-modal__close" id="qr-modal-close" type="button" aria-label="Fechar">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M18 6L6 18M6 6l12 12"/>
+      </svg>
+    </button>
+
+    <p class="qr-modal__eyebrow">Compartilhar</p>
+    <h2 id="qr-modal-title">QR Code do questionário</h2>
+    <p class="qr-modal__hint">Aponte a câmera do celular para abrir o link.</p>
+
+    <div class="qr-modal__canvas" id="qr-canvas" aria-live="polite"></div>
+
+    <p class="qr-modal__error" id="qr-error" hidden></p>
+
+    <div class="qr-modal__linkbox">
+      <input type="text" id="qr-link" readonly />
+    </div>
+
+    <div class="qr-modal__actions">
+      <button class="btn-secondary" id="qr-copy-btn" type="button">Copiar</button>
+      <button class="btn-primary" id="qr-share-btn" type="button">Compartilhar</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/link-service.js"></script>
+<script src="js/qrcode.min.js"></script>
 <script src="app-admin.js"></script>
 
 </body>

@@ -5,21 +5,147 @@ const errorMsg = document.getElementById("error-msg");
 const linkResult = document.getElementById("link-result");
 const linkOutput = document.getElementById("link-output");
 const copyBtn = document.getElementById("copy-btn");
+const shareBtn = document.getElementById("share-btn");
 const linkHint = document.getElementById("link-hint");
 
-function buildQuestionnaireUrl(companyName, questionnaireId) {
-  const base = new URL("questionnaire.html", window.location.href);
-  base.searchParams.set("company", companyName.trim());
-  base.searchParams.set("questionnaire", questionnaireId);
-  return base.toString();
+// Modal (QR Code)
+const qrModal = document.getElementById("qr-modal");
+const qrModalClose = document.getElementById("qr-modal-close");
+const qrCanvas = document.getElementById("qr-canvas");
+const qrLink = document.getElementById("qr-link");
+const qrCopyBtn = document.getElementById("qr-copy-btn");
+const qrShareBtn = document.getElementById("qr-share-btn");
+const qrError = document.getElementById("qr-error");
+
+// Reutiliza o serviço isolado já existente — evita duplicar a lógica de URL.
+const { buildQuestionnaireUrl } = window.LinkService;
+
+function buildUrl() {
+  return buildQuestionnaireUrl({
+    company: companyInput.value.trim(),
+    questionnaireId: questionnaireSelect.value,
+  });
 }
 
 function resetLinkUi() {
   generateBtn.disabled = false;
   copyBtn.textContent = "Copiar";
+  if (shareBtn) shareBtn.textContent = "Compartilhar";
   linkOutput.value = "";
   linkResult.classList.remove("is-visible");
 }
+
+/* ---------- Copy / Share com fallback em camadas ---------- */
+
+async function copyToClipboard(text) {
+  // 1) Clipboard API moderna
+  if (navigator.clipboard && window.isSecureContext) {
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch (_) {
+      // cai no fallback abaixo
+    }
+  }
+
+  // 2) Fallback legado (file://, http antigo, etc.)
+  try {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.style.position = "fixed";
+    ta.style.top = "-1000px";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    const ok = document.execCommand("copy");
+    document.body.removeChild(ta);
+    return ok;
+  } catch (_) {
+    return false;
+  }
+}
+
+async function shareUrl(text, title) {
+  // 1) Web Share API nativa (mobile e alguns desktops modernos)
+  if (navigator.share) {
+    try {
+      await navigator.share({ title: title || "Questionário Vitale", url: text });
+      return { mode: "native" };
+    } catch (err) {
+      // Usuário cancelou — não faz nada.
+      if (err && err.name === "AbortError") return { mode: "canceled" };
+      // cai no fallback
+    }
+  }
+
+  // 2) Fallback: copia para a área de transferência
+  const copied = await copyToClipboard(text);
+  if (copied) return { mode: "clipboard" };
+
+  // 3) Fallback final: usuário copia manualmente
+  return { mode: "manual", text };
+}
+
+/* ---------- QR Code ---------- */
+
+function renderQrCode(text, targetEl) {
+  if (typeof qrcode !== "function") {
+    return { ok: false, reason: "qrcode-missing" };
+  }
+
+  try {
+    const qr = qrcode(0, "M"); // typeNumber 0 = auto; M = correção média
+    qr.addData(text);
+    qr.make();
+
+    // SVG é leve, escalável e imprime bem — ideal para modal em qualquer densidade.
+    const svg = qr.createSvgTag({ cellSize: 6, margin: 2, alt: "QR Code do questionário" });
+    targetEl.innerHTML = svg;
+    return { ok: true };
+  } catch (_) {
+    targetEl.innerHTML = "";
+    return { ok: false, reason: "qrcode-failed" };
+  }
+}
+
+/* ---------- Modal ---------- */
+
+function openQrModal(url) {
+  if (!qrModal) return;
+  if (qrLink) qrLink.value = url;
+
+  if (qrError) {
+    qrError.hidden = true;
+    qrError.textContent = "";
+  }
+
+  const result = renderQrCode(url, qrCanvas);
+
+  if (!result.ok) {
+    if (qrError) {
+      qrError.hidden = false;
+      qrError.textContent =
+        "Não foi possível gerar o QR Code neste navegador. Use o link abaixo para compartilhar.";
+    }
+  }
+
+  qrModal.classList.add("is-open");
+  qrModal.setAttribute("aria-hidden", "false");
+  document.body.style.overflow = "hidden";
+
+  // Move foco para o botão de fechar para acessibilidade.
+  setTimeout(() => qrModalClose && qrModalClose.focus(), 0);
+}
+
+function closeQrModal() {
+  if (!qrModal) return;
+  qrModal.classList.remove("is-open");
+  qrModal.setAttribute("aria-hidden", "true");
+  document.body.style.overflow = "";
+}
+
+/* ---------- Eventos ---------- */
 
 generateBtn.addEventListener("click", () => {
   const company = companyInput.value.trim();
@@ -32,7 +158,7 @@ generateBtn.addEventListener("click", () => {
 
   errorMsg.classList.remove("is-visible");
 
-  const url = buildQuestionnaireUrl(company, questionnaireSelect.value);
+  const url = buildUrl();
 
   linkOutput.value = url;
   linkResult.classList.add("is-visible");
@@ -43,16 +169,101 @@ generateBtn.addEventListener("click", () => {
 copyBtn.addEventListener("click", async () => {
   if (!linkOutput.value) return;
 
-  try {
-    await navigator.clipboard.writeText(linkOutput.value);
-  } catch {
-    linkOutput.select();
-    document.execCommand("copy");
-  }
+  const ok = await copyToClipboard(linkOutput.value);
 
-  copyBtn.textContent = "Copiado!";
-  generateBtn.disabled = true;
+  if (ok) {
+    copyBtn.textContent = "Copiado!";
+    generateBtn.disabled = true;
+    if (shareBtn) shareBtn.disabled = true;
+  } else {
+    // Fallback final: seleciona o input para o usuário copiar manualmente.
+    linkOutput.focus();
+    linkOutput.select();
+    copyBtn.textContent = "Selecione e copie (Ctrl+C)";
+  }
 });
+
+if (shareBtn) {
+  shareBtn.addEventListener("click", async () => {
+    if (!linkOutput.value) return;
+    shareBtn.disabled = true;
+
+    const result = await shareUrl(linkOutput.value, "Avaliação de Riscos Psicossociais (NR-1)");
+
+    shareBtn.disabled = false;
+
+    if (result.mode === "native") {
+      shareBtn.textContent = "Compartilhar";
+      generateBtn.disabled = true;
+    } else if (result.mode === "clipboard") {
+      shareBtn.textContent = "Link copiado!";
+      generateBtn.disabled = true;
+      copyBtn.textContent = "Copiar";
+    } else if (result.mode === "manual") {
+      linkOutput.focus();
+      linkOutput.select();
+      shareBtn.textContent = "Selecione e copie (Ctrl+C)";
+    }
+  });
+}
+
+// Link do result também é clicável para abrir o modal de QR Code.
+const qrTrigger = document.getElementById("qr-trigger");
+if (qrTrigger) {
+  qrTrigger.addEventListener("click", () => {
+    if (!linkOutput.value) return;
+    openQrModal(linkOutput.value);
+  });
+}
+
+if (qrModalClose) qrModalClose.addEventListener("click", closeQrModal);
+if (qrModal) {
+  qrModal.addEventListener("click", (e) => {
+    if (e.target === qrModal || e.target.classList.contains("qr-modal__overlay")) {
+      closeQrModal();
+    }
+  });
+}
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && qrModal && qrModal.classList.contains("is-open")) {
+    closeQrModal();
+  }
+});
+
+if (qrCopyBtn) {
+  qrCopyBtn.addEventListener("click", async () => {
+    if (!qrLink || !qrLink.value) return;
+    const ok = await copyToClipboard(qrLink.value);
+    if (ok) {
+      qrCopyBtn.textContent = "Copiado!";
+    } else {
+      qrLink.focus();
+      qrLink.select();
+      qrCopyBtn.textContent = "Selecione e copie (Ctrl+C)";
+    }
+  });
+}
+
+if (qrShareBtn) {
+  qrShareBtn.addEventListener("click", async () => {
+    if (!qrLink || !qrLink.value) return;
+    qrShareBtn.disabled = true;
+
+    const result = await shareUrl(qrLink.value, "Avaliação de Riscos Psicossociais (NR-1)");
+
+    qrShareBtn.disabled = false;
+
+    if (result.mode === "native") {
+      qrShareBtn.textContent = "Compartilhar";
+    } else if (result.mode === "clipboard") {
+      qrShareBtn.textContent = "Link copiado!";
+    } else if (result.mode === "manual") {
+      qrLink.focus();
+      qrLink.select();
+      qrShareBtn.textContent = "Selecione e copie (Ctrl+C)";
+    }
+  });
+}
 
 companyInput.addEventListener("input", () => {
   errorMsg.classList.remove("is-visible");
@@ -60,6 +271,7 @@ companyInput.addEventListener("input", () => {
   if (generateBtn.disabled) {
     generateBtn.disabled = false;
     copyBtn.textContent = "Copiar";
+    if (shareBtn) shareBtn.textContent = "Compartilhar";
 
     linkOutput.value = "";
     linkResult.classList.remove("is-visible");
