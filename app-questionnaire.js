@@ -183,7 +183,7 @@ function renderQuestion() {
 
   els.qOptions.innerHTML = "";
 
-  if (question.type === "textarea") {
+  if (question.type === "textarea" || question.type === "open") {
 
     const textarea = document.createElement("textarea");
     textarea.className = "q-textarea";
@@ -197,7 +197,7 @@ function renderQuestion() {
 
     els.qOptions.appendChild(textarea);
 
-  } else {
+  } else if (scale) {
 
     scale.forEach((opt) => {
 
