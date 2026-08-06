@@ -313,56 +313,79 @@ async function submitResponses() {
 
     try {
 
-      const formData = new FormData();
+      const params = new URLSearchParams();
 
-      const fieldsToSend = [
-        ["company", payload.company],
-        ["questionnaire", payload.questionnaire],
-        ["gender", payload.employee.gender],
-        ["age", payload.employee.age],
-        ["role", payload.employee.role],
-        ["companyTime", payload.employee.companyTime],
-        ["department", payload.employee.department],
-        ["unit", payload.employee.unit],
-        [
-  "answers",
-  payload.answers
-    .map(
-      (answer) => `Seção: ${answer.section}
+      const answersText = payload.answers
+        .map(
+          (answer) => `Seção: ${answer.section}
 Pergunta: ${answer.question}
 Valor: ${answer.value}
 Resposta: ${answer.label}`
-    )
-    .join("\n\n"),
-],
-      ];
+        )
+        .join("\n\n");
 
-      fieldsToSend.forEach(([key, value]) => {
+      const fieldsToSend = {
+        company: payload.company,
+        questionnaire: payload.questionnaire,
+        gender: payload.employee.gender,
+        age: payload.employee.age,
+        role: payload.employee.role,
+        companyTime: payload.employee.companyTime,
+        department: payload.employee.department,
+        unit: payload.employee.unit,
+        answers: answersText,
+      };
+
+      for (const [key, value] of Object.entries(fieldsToSend)) {
         const entryId = GOOGLE_FORM_ENTRIES[key];
-        if (entryId) formData.append(entryId, value);
+        if (entryId) params.append(entryId, value);
+      }
+
+      const submitUrl = `https://docs.google.com/forms/d/e/${GOOGLE_FORM_ID}/formResponse`;
+      const body = params.toString();
+      const startedAt = performance.now();
+
+      console.log("[submit] Enviando respostas ao Google Forms", {
+        url: submitUrl,
+        bodyBytes: body.length,
+        fields: Object.keys(fieldsToSend),
       });
 
-      await fetch(
-        `https://docs.google.com/forms/d/e/${GOOGLE_FORM_ID}/formResponse`,
-        {
-          method: "POST",
-          mode: "no-cors",
-          body: formData,
-        }
-      );
+      await fetch(submitUrl, {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body,
+      });
 
-      console.log("Respostas enviadas ao Google Forms com sucesso.");
+      const elapsed = Math.round(performance.now() - startedAt);
+      console.log(
+        `[submit] Requisição finalizada em ${elapsed}ms. ` +
+          `Com mode:"no-cors" a resposta é opaca (status 0); ` +
+          `confirme os dados na aba "Respostas" do Google Forms.`
+      );
 
     } catch (err) {
 
-      console.error("Falha ao enviar para o Google Forms:", err);
-      console.log("Payload completo (para debug):", payload);
+      console.error("[submit] Falha ao enviar para o Google Forms:", err);
+      console.log("[submit] Payload completo (para debug):", payload);
 
     }
 
   } else {
 
-    console.log("Google Forms não configurado. Payload:", payload);
+    console.warn(
+      "[submit] Google Forms não configurado — nenhum envio foi realizado.",
+      {
+        hasFormId: Boolean(GOOGLE_FORM_ID),
+        missingEntries: Object.entries(GOOGLE_FORM_ENTRIES)
+          .filter(([, v]) => !v)
+          .map(([k]) => k),
+      }
+    );
+    console.log("[submit] Payload (modo local):", payload);
 
   }
 

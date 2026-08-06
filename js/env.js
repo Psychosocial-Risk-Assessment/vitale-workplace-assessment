@@ -52,12 +52,26 @@ async function loadEnv() {
   } catch (_) {}
 
   const resolved = {};
+  const missing = [];
   for (const key of Object.keys(ENV_DEFAULTS)) {
     const fromMeta = meta[key];
-    resolved[key] = fromMeta !== undefined && fromMeta !== "" ? fromMeta : ENV_DEFAULTS[key];
+    if (fromMeta !== undefined && fromMeta !== "") {
+      resolved[key] = fromMeta;
+    } else {
+      resolved[key] = ENV_DEFAULTS[key];
+      missing.push(key);
+    }
   }
 
   window.Env = Object.freeze(resolved);
+
+  if (missing.length) {
+    console.warn(
+      "[env] Variáveis ausentes (usando defaults vazios):",
+      missing.join(", ")
+    );
+  }
+
   return window.Env;
 }
 
