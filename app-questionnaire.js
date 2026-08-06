@@ -286,7 +286,7 @@ async function submitResponses() {
     employee: { ...state.employee },
     answers: buildExportAnswers(),
   };
- 
+
   const hasFormConfig =
   GOOGLE_FORM_ID &&
   Object.values(GOOGLE_FORM_ENTRIES).every(Boolean);

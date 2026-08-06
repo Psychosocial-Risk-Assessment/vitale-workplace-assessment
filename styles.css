@@ -361,7 +361,13 @@ a:focus-visible {
   margin: 0 auto 16px;
   min-height: 200px;
 }
-.qr-modal__canvas svg { display: block; max-width: 100%; height: auto; }
+.qr-modal__canvas svg,
+.qr-modal__canvas canvas {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+}
 
 .qr-modal__error {
   color: var(--orange);

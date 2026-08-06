@@ -8,7 +8,6 @@ const copyBtn = document.getElementById("copy-btn");
 const shareBtn = document.getElementById("share-btn");
 const linkHint = document.getElementById("link-hint");
 
-// Modal (QR Code)
 const qrModal = document.getElementById("qr-modal");
 const qrModalClose = document.getElementById("qr-modal-close");
 const qrCanvas = document.getElementById("qr-canvas");
@@ -17,7 +16,6 @@ const qrCopyBtn = document.getElementById("qr-copy-btn");
 const qrShareBtn = document.getElementById("qr-share-btn");
 const qrError = document.getElementById("qr-error");
 
-// Reutiliza o serviço isolado já existente — evita duplicar a lógica de URL.
 const { buildQuestionnaireUrl } = window.LinkService;
 
 function buildUrl() {
@@ -35,20 +33,14 @@ function resetLinkUi() {
   linkResult.classList.remove("is-visible");
 }
 
-/* ---------- Copy / Share com fallback em camadas ---------- */
-
 async function copyToClipboard(text) {
-  // 1) Clipboard API moderna
   if (navigator.clipboard && window.isSecureContext) {
     try {
       await navigator.clipboard.writeText(text);
       return true;
-    } catch (_) {
-      // cai no fallback abaixo
-    }
+    } catch (_) {}
   }
 
-  // 2) Fallback legado (file://, http antigo, etc.)
   try {
     const ta = document.createElement("textarea");
     ta.value = text;
@@ -67,41 +59,36 @@ async function copyToClipboard(text) {
 }
 
 async function shareUrl(text, title) {
-  // 1) Web Share API nativa (mobile e alguns desktops modernos)
   if (navigator.share) {
     try {
       await navigator.share({ title: title || "Questionário Vitale", url: text });
       return { mode: "native" };
     } catch (err) {
-      // Usuário cancelou — não faz nada.
       if (err && err.name === "AbortError") return { mode: "canceled" };
-      // cai no fallback
     }
   }
 
-  // 2) Fallback: copia para a área de transferência
   const copied = await copyToClipboard(text);
   if (copied) return { mode: "clipboard" };
 
-  // 3) Fallback final: usuário copia manualmente
   return { mode: "manual", text };
 }
-
-/* ---------- QR Code ---------- */
 
 function renderQrCode(text, targetEl) {
   if (typeof qrcode !== "function") {
     return { ok: false, reason: "qrcode-missing" };
   }
 
+  targetEl.innerHTML = "";
+  const canvas = document.createElement("canvas");
+  targetEl.appendChild(canvas);
+
   try {
-    const qr = qrcode(0, "M"); // typeNumber 0 = auto; M = correção média
+    const qr = qrcode(0, "H");
     qr.addData(text);
     qr.make();
 
-    // SVG é leve, escalável e imprime bem — ideal para modal em qualquer densidade.
-    const svg = qr.createSvgTag({ cellSize: 6, margin: 2, alt: "QR Code do questionário" });
-    targetEl.innerHTML = svg;
+    composeQrWithLogo(canvas, qr);
     return { ok: true };
   } catch (_) {
     targetEl.innerHTML = "";
@@ -109,7 +96,99 @@ function renderQrCode(text, targetEl) {
   }
 }
 
-/* ---------- Modal ---------- */
+function composeQrWithLogo(canvas, qr) {
+  const QR_SIZE = 280;
+  const CELL = 6;
+  const MODULE_COUNT = qr.getModuleCount();
+  const MARGIN = 4;
+  const totalModules = MODULE_COUNT + MARGIN * 2;
+  const baseSize = CELL * totalModules;
+
+  const dpr = Math.max(1, Math.min(window.devicePixelRatio || 1, 3));
+
+  canvas.width = QR_SIZE * dpr;
+  canvas.height = QR_SIZE * dpr;
+  canvas.style.width = QR_SIZE + "px";
+  canvas.style.height = QR_SIZE + "px";
+
+  const ctx = canvas.getContext("2d");
+  ctx.scale(dpr, dpr);
+
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(0, 0, QR_SIZE, QR_SIZE);
+
+  const offset = (QR_SIZE - baseSize) / 2;
+
+  ctx.fillStyle = "#1a1a1a";
+  for (let r = 0; r < MODULE_COUNT; r++) {
+    for (let c = 0; c < MODULE_COUNT; c++) {
+      if (qr.isDark(r, c)) {
+        ctx.fillRect(
+          offset + (c + MARGIN) * CELL,
+          offset + (r + MARGIN) * CELL,
+          CELL,
+          CELL
+        );
+      }
+    }
+  }
+
+  const logoArea = QR_SIZE * 0.32;
+  const logoPadding = 10;
+  const logoSize = logoArea - logoPadding * 2;
+  const logoX = (QR_SIZE - logoArea) / 2;
+  const logoY = (QR_SIZE - logoArea) / 2;
+
+  const bgRadius = 10;
+  ctx.fillStyle = "#ffffff";
+  roundRect(ctx, logoX, logoY, logoArea, logoArea, bgRadius);
+  ctx.fill();
+
+  drawCenteredLogo(canvas, ctx, QR_SIZE, logoSize, () => {
+    canvas.dataset.ready = "true";
+  });
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  const radius = Math.min(r, w / 2, h / 2);
+  ctx.beginPath();
+  ctx.moveTo(x + radius, y);
+  ctx.lineTo(x + w - radius, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + radius);
+  ctx.lineTo(x + w, y + h - radius);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - radius, y + h);
+  ctx.lineTo(x + radius, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - radius);
+  ctx.lineTo(x, y + radius);
+  ctx.quadraticCurveTo(x, y, x + radius, y);
+  ctx.closePath();
+}
+
+function drawCenteredLogo(canvas, ctx, canvasSize, logoSize, onLoad) {
+  const img = new Image();
+  img.src = "assets/logope.png";
+  img.decoding = "async";
+
+  const draw = () => {
+    const ratio = Math.min(logoSize / img.naturalWidth, logoSize / img.naturalHeight);
+    const w = img.naturalWidth * ratio;
+    const h = img.naturalHeight * ratio;
+    const x = (canvasSize - w) / 2;
+    const y = (canvasSize - h) / 2;
+
+    ctx.drawImage(img, x, y, w, h);
+    if (typeof onLoad === "function") onLoad();
+  };
+
+  if (img.complete && img.naturalWidth > 0) {
+    draw();
+  } else {
+    img.onload = draw;
+    img.onerror = () => {
+      if (typeof onLoad === "function") onLoad();
+    };
+  }
+}
 
 function openQrModal(url) {
   if (!qrModal) return;
@@ -134,7 +213,6 @@ function openQrModal(url) {
   qrModal.setAttribute("aria-hidden", "false");
   document.body.style.overflow = "hidden";
 
-  // Move foco para o botão de fechar para acessibilidade.
   setTimeout(() => qrModalClose && qrModalClose.focus(), 0);
 }
 
@@ -144,8 +222,6 @@ function closeQrModal() {
   qrModal.setAttribute("aria-hidden", "true");
   document.body.style.overflow = "";
 }
-
-/* ---------- Eventos ---------- */
 
 generateBtn.addEventListener("click", () => {
   const company = companyInput.value.trim();
@@ -176,7 +252,6 @@ copyBtn.addEventListener("click", async () => {
     generateBtn.disabled = true;
     if (shareBtn) shareBtn.disabled = true;
   } else {
-    // Fallback final: seleciona o input para o usuário copiar manualmente.
     linkOutput.focus();
     linkOutput.select();
     copyBtn.textContent = "Selecione e copie (Ctrl+C)";
@@ -207,7 +282,6 @@ if (shareBtn) {
   });
 }
 
-// Link do result também é clicável para abrir o modal de QR Code.
 const qrTrigger = document.getElementById("qr-trigger");
 if (qrTrigger) {
   qrTrigger.addEventListener("click", () => {
