@@ -1,16 +1,19 @@
-const GOOGLE_FORM_ID = "1FAIpQLSdYGsiXhmDkclGMlpjDypfFFDlrRMzMWjxpg2UZpX69-hut9w";
+function readGoogleFormEntries() {
+  return {
+    company: window.Env.GOOGLE_FORM_ENTRY_COMPANY || "",
+    questionnaire: window.Env.GOOGLE_FORM_ENTRY_QUESTIONNAIRE || "",
+    gender: window.Env.GOOGLE_FORM_ENTRY_GENDER || "",
+    age: window.Env.GOOGLE_FORM_ENTRY_AGE || "",
+    role: window.Env.GOOGLE_FORM_ENTRY_ROLE || "",
+    companyTime: window.Env.GOOGLE_FORM_ENTRY_COMPANY_TIME || "",
+    department: window.Env.GOOGLE_FORM_ENTRY_DEPARTMENT || "",
+    unit: window.Env.GOOGLE_FORM_ENTRY_UNIT || "",
+    answers: window.Env.GOOGLE_FORM_ENTRY_ANSWERS || "",
+  };
+}
 
-const GOOGLE_FORM_ENTRIES = {
-  company: "entry.1355382990",
-  questionnaire: "entry.420033818",
-  gender: "entry.1645222977",
-  age: "entry.963709191",
-  role: "entry.940938778",
-  companyTime: "entry.2054548076",
-  department: "entry.351018800",
-  unit: "entry.1950292232",
-  answers: "entry.444470611",
-};
+let GOOGLE_FORM_ID = "";
+let GOOGLE_FORM_ENTRIES = readGoogleFormEntries();
 
 const qs = new URLSearchParams(window.location.search);
 const companyParam = qs.get("company");
@@ -89,11 +92,26 @@ function fail(message) {
   showOnly(els.error);
 }
 
-if (!companyParam || !questionnaireParam) {
-  fail("Este link está sem os parâmetros de empresa ou questionário. Peça o link correto a quem organizou a avaliação.");
-} else {
-  loadQuestionnaire(questionnaireParam);
+function bootstrapAfterEnv() {
+  GOOGLE_FORM_ID = window.Env.GOOGLE_FORM_ID || "";
+  GOOGLE_FORM_ENTRIES = readGoogleFormEntries();
+
+  if (!companyParam || !questionnaireParam) {
+    fail("Este link está sem os parâmetros de empresa ou questionário. Peça o link correto a quem organizou a avaliação.");
+  } else {
+    loadQuestionnaire(questionnaireParam);
+  }
 }
+
+function bootstrap() {
+  if (typeof window.loadEnv === "function") {
+    window.loadEnv().then(bootstrapAfterEnv);
+  } else {
+    bootstrapAfterEnv();
+  }
+}
+
+bootstrap();
 
 let state = {
   data: null,
