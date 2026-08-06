@@ -1,6 +1,6 @@
 {
     "id": "hse_outdoor",
-    "title": "HSE-IT - Outdoor",
+    "title": "Vitale Outdoor",
     "scales": {
       "frequencia": [
         { "value": 1, "label": "Nunca / quase nunca" },
@@ -15,7 +15,7 @@
     "sections": [
       {
         "id": "hse_outdoor",
-        "title": "HSE-IT - Outdoor",
+        "title": "Vitale Outdoor",
         "questions": [
           { "id": "hse_001", "text": "Eu sei o que preciso fazer no meu trabalho?", "scaleId": "frequencia" },
           { "id": "hse_002", "text": "Posso escolher a hora de parar para descansar?", "scaleId": "frequencia" },

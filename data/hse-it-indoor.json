@@ -1,6 +1,6 @@
 {
     "id": "hse_indoor",
-    "title": "HSE-IT — Indoor",
+    "title": "Vitale Indoor",
     "_readme": "Instrumento que reúne, para ambientes de trabalho internos (indoor), as questões da Análise Ergonômica Preliminar (AEP) já revisada — com a questão de controle de temperatura removida — e as questões do HSE Management Standards Indicator Tool (HSE-IT), voltadas à avaliação de fatores psicossociais do trabalho. Itens relacionados a ambientes externos (exposição a sol, chuva, terreno e tráfego de veículos) foram excluídos por não se aplicarem a atividades internas. As questões 3, 12, 13, 22, 26, 29, 30, 32 e 38 foram reescritas em linguagem mais simples e acessível. A última questão (hse_071) é um espaço de comentário aberto e não compõe a pontuação padrão do HSE-IT.",
   
     "scales": {
@@ -17,7 +17,7 @@
     "sections": [
       {
         "id": "hse_indoor",
-        "title": "HSE-IT — Indoor",
+        "title": "Vitale Indoor",
         "questions": [
           { "id": "hse_001", "text": "O trabalho é realizado sentado durante toda a jornada de trabalho?", "scaleId": "frequencia" },
           { "id": "hse_002", "text": "O trabalho é realizado alternado (em pé/sentado)?", "scaleId": "frequencia" },

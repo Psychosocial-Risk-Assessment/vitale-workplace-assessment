@@ -80,118 +80,18 @@ function renderQrCode(text, targetEl) {
   }
 
   targetEl.innerHTML = "";
-  const canvas = document.createElement("canvas");
-  targetEl.appendChild(canvas);
 
   try {
     const qr = qrcode(0, "H");
     qr.addData(text);
     qr.make();
 
-    composeQrWithLogo(canvas, qr);
+    const svg = qr.createSvgTag({ cellSize: 8, margin: 2, alt: "QR Code do questionário" });
+    targetEl.innerHTML = svg;
     return { ok: true };
   } catch (_) {
     targetEl.innerHTML = "";
     return { ok: false, reason: "qrcode-failed" };
-  }
-}
-
-function composeQrWithLogo(canvas, qr) {
-  const QR_SIZE = 320;
-  const CELL = 7;
-  const MODULE_COUNT = qr.getModuleCount();
-  const MARGIN = 4;
-  const totalModules = MODULE_COUNT + MARGIN * 2;
-  const baseSize = CELL * totalModules;
-
-  const dpr = Math.max(1, Math.min(window.devicePixelRatio || 1, 3));
-
-  canvas.width = QR_SIZE * dpr;
-  canvas.height = QR_SIZE * dpr;
-  canvas.style.width = QR_SIZE + "px";
-  canvas.style.height = QR_SIZE + "px";
-
-  const ctx = canvas.getContext("2d");
-  ctx.scale(dpr, dpr);
-
-  ctx.fillStyle = "#ffffff";
-  ctx.fillRect(0, 0, QR_SIZE, QR_SIZE);
-
-  const offset = (QR_SIZE - baseSize) / 2;
-
-  ctx.fillStyle = "#1a1a1a";
-  for (let r = 0; r < MODULE_COUNT; r++) {
-    for (let c = 0; c < MODULE_COUNT; c++) {
-      if (qr.isDark(r, c)) {
-        ctx.fillRect(
-          offset + (c + MARGIN) * CELL,
-          offset + (r + MARGIN) * CELL,
-          CELL,
-          CELL
-        );
-      }
-    }
-  }
-
-  const logoArea = QR_SIZE * 0.22;
-  const logoPadding = 14;
-  const logoSize = logoArea - logoPadding * 2;
-  const logoX = (QR_SIZE - logoArea) / 2;
-  const logoY = (QR_SIZE - logoArea) / 2;
-
-  const bgRadius = 12;
-  ctx.fillStyle = "#ffffff";
-  roundRect(ctx, logoX, logoY, logoArea, logoArea, bgRadius);
-  ctx.fill();
-
-  ctx.strokeStyle = "#e5e7eb";
-  ctx.lineWidth = 1;
-  roundRect(ctx, logoX, logoY, logoArea, logoArea, bgRadius);
-  ctx.stroke();
-
-  drawCenteredLogo(canvas, ctx, QR_SIZE, logoSize, () => {
-    canvas.dataset.ready = "true";
-  });
-}
-
-function roundRect(ctx, x, y, w, h, r) {
-  const radius = Math.min(r, w / 2, h / 2);
-  ctx.beginPath();
-  ctx.moveTo(x + radius, y);
-  ctx.lineTo(x + w - radius, y);
-  ctx.quadraticCurveTo(x + w, y, x + w, y + radius);
-  ctx.lineTo(x + w, y + h - radius);
-  ctx.quadraticCurveTo(x + w, y + h, x + w - radius, y + h);
-  ctx.lineTo(x + radius, y + h);
-  ctx.quadraticCurveTo(x, y + h, x, y + h - radius);
-  ctx.lineTo(x, y + radius);
-  ctx.quadraticCurveTo(x, y, x + radius, y);
-  ctx.closePath();
-}
-
-function drawCenteredLogo(canvas, ctx, canvasSize, logoSize, onLoad) {
-  const img = new Image();
-  img.src = "assets/logope.png";
-  img.decoding = "async";
-
-  const draw = () => {
-    const ratio = Math.min(logoSize / img.naturalWidth, logoSize / img.naturalHeight);
-    const w = img.naturalWidth * ratio;
-    const h = img.naturalHeight * ratio;
-    const x = (canvasSize - w) / 2;
-    const y = (canvasSize - h) / 2;
-
-    ctx.drawImage(img, x, y, w, h);
-    if (typeof onLoad === "function") onLoad();
-  };
-
-  if (img.complete && img.naturalWidth > 0) {
-    draw();
-  } else {
-    img.onload = draw;
-    img.onerror = () => {
-      if (typeof onLoad === "function") onLoad();
-    };
   }
 }
 
