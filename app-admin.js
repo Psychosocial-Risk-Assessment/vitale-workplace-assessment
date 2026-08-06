@@ -97,8 +97,8 @@ function renderQrCode(text, targetEl) {
 }
 
 function composeQrWithLogo(canvas, qr) {
-  const QR_SIZE = 280;
-  const CELL = 6;
+  const QR_SIZE = 320;
+  const CELL = 7;
   const MODULE_COUNT = qr.getModuleCount();
   const MARGIN = 4;
   const totalModules = MODULE_COUNT + MARGIN * 2;
@@ -133,16 +133,21 @@ function composeQrWithLogo(canvas, qr) {
     }
   }
 
-  const logoArea = QR_SIZE * 0.32;
-  const logoPadding = 10;
+  const logoArea = QR_SIZE * 0.22;
+  const logoPadding = 14;
   const logoSize = logoArea - logoPadding * 2;
   const logoX = (QR_SIZE - logoArea) / 2;
   const logoY = (QR_SIZE - logoArea) / 2;
 
-  const bgRadius = 10;
+  const bgRadius = 12;
   ctx.fillStyle = "#ffffff";
   roundRect(ctx, logoX, logoY, logoArea, logoArea, bgRadius);
   ctx.fill();
+
+  ctx.strokeStyle = "#e5e7eb";
+  ctx.lineWidth = 1;
+  roundRect(ctx, logoX, logoY, logoArea, logoArea, bgRadius);
+  ctx.stroke();
 
   drawCenteredLogo(canvas, ctx, QR_SIZE, logoSize, () => {
     canvas.dataset.ready = "true";
