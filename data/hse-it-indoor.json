@@ -88,8 +88,7 @@
           { "id": "hse_067", "text": "Quando algo muda, eu continuo fazendo meu trabalho com o mesmo cuidado?", "scaleId": "frequencia" },
           { "id": "hse_068", "text": "Meu trabalho mexe muito com minhas emoções?", "scaleId": "frequencia" },
           { "id": "hse_069", "text": "As relações no trabalho são tensas?", "scaleId": "frequencia" },
-          { "id": "hse_070", "text": "Meu chefe me incentiva no trabalho?", "scaleId": "frequencia" },
-          { "id": "hse_071", "text": "Você quer fazer algum comentário sobre as perguntas que respondeu?", "type": "open" }
+          { "id": "hse_070", "text": "Meu chefe me incentiva no trabalho?", "scaleId": "frequencia" }
         ]
       }
     ]
