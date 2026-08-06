@@ -40,23 +40,35 @@ function readMetaEnv() {
   return out;
 }
 
+function readInlineGlobal() {
+  if (typeof window === "undefined") return {};
+  const cfg = window.__ENV_CONFIG__;
+  if (!cfg || typeof cfg !== "object") return {};
+  return { ...cfg };
+}
+
 async function loadEnv() {
+  const inline = readInlineGlobal();
   const meta = readMetaEnv();
+  const dotFile = {};
 
   try {
     const res = await fetch(".env", { cache: "no-store" });
     if (res.ok) {
       const file = parseDotEnv(await res.text());
-      Object.assign(meta, file);
+      Object.assign(dotFile, file);
     }
   } catch (_) {}
 
   const resolved = {};
   const missing = [];
   for (const key of Object.keys(ENV_DEFAULTS)) {
-    const fromMeta = meta[key];
-    if (fromMeta !== undefined && fromMeta !== "") {
-      resolved[key] = fromMeta;
+    const sources = [inline[key], meta[key], dotFile[key]];
+    const found = sources.find(
+      (v) => v !== undefined && v !== null && v !== ""
+    );
+    if (found !== undefined) {
+      resolved[key] = found;
     } else {
       resolved[key] = ENV_DEFAULTS[key];
       missing.push(key);
@@ -69,6 +81,10 @@ async function loadEnv() {
     console.warn(
       "[env] Variáveis ausentes (usando defaults vazios):",
       missing.join(", ")
+    );
+  } else {
+    console.info(
+      `[env] ${Object.keys(resolved).length} variáveis carregadas.`
     );
   }
 
